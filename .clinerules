@@ -1,5 +1,6 @@
 # Project Guidelines
 - Always read PRD.md and todo-*.md to have good understanding of the codebase and it's current state.
+- After completing tasks, ALWAYS make sure to run pnpm check making sure the codebase is error free.
 - Always look for existing code to iterate on instead of creating new code.
 - Do not drastically change the patterns before trying to iterate on existing patterns.
 - Always kill all existing related servers that may have been created in previous testing before trying to start a new server.

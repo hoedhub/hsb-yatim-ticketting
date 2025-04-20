@@ -7,3 +7,14 @@
 [2025-04-20 19:58:28] - Created systemPatterns.md.
 [2025-04-20 19:58:28] - Created decisionLog.md.
 [2025-04-20 20:04:30] - Completed task A-05: Buat Struktur Layout Dasar.
+2025-04-20 21:13:42 - Completed and committed changes for task B.
+
+2025-04-20 21:43:41 - Started task C-01: Create Institution Listing Page.
+
+2025-04-20 21:43:41 - Created src/routes/institutions/+page.server.ts and src/routes/institutions/+page.svelte for C-01.
+
+2025-04-20 21:43:41 - Debugged and fixed '$db' alias issue by updating svelte.config.js.
+
+2025-04-20 21:43:41 - Debugged and fixed type error (pic vs picName) in src/routes/institutions/+page.svelte.
+
+2025-04-20 21:43:41 - Completed task C-01: Create Institution Listing Page and verified with pnpm check.
