@@ -26,7 +26,7 @@
         *   [x] Dapatkan Auth Token: `turso db tokens create hsb-yatim-ticketting-db`.
         *   [x] Simpan URL dan Token di file `.env` (e.g., `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN`). Jangan commit `.env`.
     *   [x] Konfigurasi Drizzle Kit: Buat `drizzle.config.ts`.
-    *   [x] Buat file helper koneksi DB (e.g., `src/lib/index.ts`) untuk menginisialisasi client Drizzle dengan Turso credentials dari `.env`.
+    *   [x] Buat file helper koneksi DB (e.g., `src/lib/server/db.ts`) untuk menginisialisasi client Drizzle dengan Turso credentials dari `.env`.
 *   [ ] **A-05:** Buat Struktur Layout Dasar.
     *   [ ] Edit `src/routes/+layout.svelte`.
     *   [ ] Tambahkan struktur dasar (misal: Sidebar navigasi statis, area konten utama).
