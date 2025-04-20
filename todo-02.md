@@ -7,8 +7,8 @@
 ## J. Penyempurnaan Manajemen Ukuran
 
 *   [ ] **J-01:** Tambahkan field `isArchived` ke skema `measurementSets`.
-    *   [ ] Buat file migrasi baru: `npx drizzle-kit generate:sqlite ...`
-    *   [ ] Terapkan migrasi: `npx drizzle-kit push:sqlite ...`
+    *   [ ] Buat file migrasi baru: `pnpm run db:generate ...`
+    *   [ ] Terapkan migrasi: `pnpm run db:migrate ...`
 *   [ ] **J-02:** Update UI halaman Detail Pelanggan/Edit Set Ukuran.
     *   [ ] Tambahkan tombol/toggle "Arsipkan" / "Aktifkan" pada setiap Set Ukuran.
     *   [ ] Implementasikan form action untuk update `isArchived`.

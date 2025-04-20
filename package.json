@@ -17,6 +17,7 @@
 		"test:e2e": "playwright test",
 		"db:push": "drizzle-kit push",
 		"db:migrate": "drizzle-kit migrate",
+		"db:generate": "drizzle-kit generate",
 		"db:studio": "drizzle-kit studio"
 	},
 	"devDependencies": {
@@ -54,7 +55,7 @@
 	"dependencies": {
 		"@libsql/client": "^0.14.0",
 		"dotenv": "^16.5.0",
-		"drizzle-orm": "^0.40.1",
+		"drizzle-orm": "^0.42.0",
 		"lucide-svelte": "^0.501.0"
 	},
 	"pnpm": {

@@ -33,8 +33,7 @@
         "mcp",
         "command"
       ],
-      "source": "project",
-      "completionMode": "architect"
+      "source": "project"
     },
     {
       "slug": "tdd",
@@ -86,8 +85,7 @@
           "edit",
           {
             "fileRegex": "\\.md$",
-            "description": "Markdown files only",
-            "completionMode": "architect"
+            "description": "Markdown files only"
           }
         ]
       ],

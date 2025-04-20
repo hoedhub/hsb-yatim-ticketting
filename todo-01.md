@@ -27,29 +27,29 @@
         *   [x] Simpan URL dan Token di file `.env` (e.g., `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN`). Jangan commit `.env`.
     *   [x] Konfigurasi Drizzle Kit: Buat `drizzle.config.ts`.
     *   [x] Buat file helper koneksi DB (e.g., `src/lib/server/db.ts`) untuk menginisialisasi client Drizzle dengan Turso credentials dari `.env`.
-*   [ ] **A-05:** Buat Struktur Layout Dasar.
-    *   [ ] Edit `src/routes/+layout.svelte`.
-    *   [ ] Tambahkan struktur dasar (misal: Sidebar navigasi statis, area konten utama).
-    *   [ ] Tambahkan link navigasi awal (Home, Pelanggan, Institusi, Pesanan, Pengaturan).
+*   [x] **A-05:** Buat Struktur Layout Dasar.
+    *   [x] Edit `src/routes/+layout.svelte`.
+    *   [x] Tambahkan struktur dasar (misal: Sidebar navigasi statis, area konten utama).
+    *   [x] Tambahkan link navigasi awal (Home, Pelanggan, Institusi, Pesanan, Pengaturan).
 
 ## B. Definisi Skema Database & Migrasi Awal
 
-*   [ ] **B-01:** Buat file skema (`src/lib/db/schema.ts`).
-*   [ ] **B-02:** Definisikan tabel `institutions`.
-*   [ ] **B-03:** Definisikan tabel `customers`.
-*   [ ] **B-04:** Definisikan tabel junction `customerToInstitution`.
-*   [ ] **B-05:** Definisikan tabel `garmentTypes`.
-*   [ ] **B-06:** Definisikan tabel `measurementPoints`.
-*   [ ] **B-07:** Definisikan tabel `measurementSets` (tanpa `isArchived` dulu).
-*   [ ] **B-08:** Definisikan tabel `measurementDetails`.
-*   [ ] **B-09:** Definisikan tabel `orders` (kolom dasar: id, orderNumber [nullable dulu?], customerId, institutionId, orderDate, dueDate, notes, currentStatus, isPaid, createdAt).
-*   [ ] **B-10:** Definisikan tabel `orderItems` (kolom dasar: id, orderId, customerId, measurementSetId, quantity, material, color, itemNotes, ticketPrintedAt [nullable]).
-*   [ ] **B-11:** Definisikan tabel `orderStatusHistory` (kolom dasar: id, orderId, status, changedAt, notes).
-*   [ ] **B-12:** Definisikan relasi antar tabel menggunakan `relations()` dari Drizzle.
-*   [ ] **B-13:** Generate migrasi awal.
-    *   [ ] `npx drizzle-kit generate:sqlite --schema=src/lib/db/schema.ts`
-*   [ ] **B-14:** Terapkan migrasi ke database Turso.
-    *   [ ] `npx drizzle-kit push:sqlite --schema=src/lib/db/schema.ts` (atau metode migrasi lain jika preferensi berbeda).
+*   [x] **B-01:** Buat file skema (`src/lib/db/schema.ts`).
+*   [x] **B-02:** Definisikan tabel `institutions`.
+*   [x] **B-03:** Definisikan tabel `customers`.
+*   [x] **B-04:** Definisikan tabel junction `customerToInstitution`.
+*   [x] **B-05:** Definisikan tabel `garmentTypes`.
+*   [x] **B-06:** Definisikan tabel `measurementPoints`.
+*   [x] **B-07:** Definisikan tabel `measurementSets` (tanpa `isArchived` dulu).
+*   [x] **B-08:** Definisikan tabel `measurementDetails`.
+*   [x] **B-09:** Definisikan tabel `orders` (kolom dasar: id, orderNumber [nullable dulu?], customerId, institutionId, orderDate, dueDate, notes, currentStatus, isPaid, createdAt).
+*   [x] **B-10:** Definisikan tabel `orderItems` (kolom dasar: id, orderId, customerId, measurementSetId, quantity, material, color, itemNotes, ticketPrintedAt [nullable]).
+*   [x] **B-11:** Definisikan tabel `orderStatusHistory` (kolom dasar: id, orderId, status, changedAt, notes).
+*   [x] **B-12:** Definisikan relasi antar tabel menggunakan `relations()` dari Drizzle.
+*   [x] **B-13:** Generate migrasi awal.
+    *   [x] `pnpm run db:generate`
+*   [x] **B-14:** Terapkan migrasi ke database Turso.
+    *   [x] `pnpm run db:migrate` (atau metode migrasi lain jika preferensi berbeda).
 
 ## C. Manajemen Institusi (CRUD)
 
