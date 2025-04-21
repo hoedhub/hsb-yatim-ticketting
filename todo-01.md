@@ -53,16 +53,16 @@
 
 ## C. Manajemen Institusi (CRUD)
 
-*   [ ] **C-01:** Buat halaman daftar Institusi (`src/routes/institutions/+page.svelte`).
-    *   [ ] Fetch data institusi menggunakan `load` function (`+page.server.ts`).
-    *   [ ] Tampilkan data dalam tabel DaisyUI.
-    *   [ ] Tambahkan tombol "Tambah Institusi Baru".
-    *   [ ] Tambahkan link/tombol "Edit" & "Hapus" per baris.
-*   [ ] **C-02:** Buat halaman tambah Institusi (`src/routes/institutions/new/+page.svelte`).
-    *   [ ] Buat form dengan input fields (Nama, PIC, Kontak, Alamat) menggunakan komponen DaisyUI.
-    *   [ ] Implementasikan form action (`+page.server.ts`) untuk menyimpan data baru ke DB.
-    *   [ ] Tambahkan validasi dasar (misal: nama tidak boleh kosong).
-    *   [ ] Redirect ke halaman daftar setelah berhasil.
+*   [x] **C-01:** Buat halaman daftar Institusi (`src/routes/institutions/+page.svelte`).
+    *   [x] Fetch data institusi menggunakan `load` function (`+page.server.ts`).
+    *   [x] Tampilkan data dalam tabel DaisyUI.
+    *   [x] Tambahkan tombol "Tambah Institusi Baru".
+    *   [x] Tambahkan link/tombol "Edit" & "Hapus" per baris.
+*   [x] **C-02:** Buat halaman tambah Institusi (`src/routes/institutions/new/+page.svelte`).
+    *   [x] Buat form dengan input fields (Nama, PIC, Kontak, Alamat) menggunakan komponen DaisyUI.
+    *   [x] Implementasikan form action (`+page.server.ts`) untuk menyimpan data baru ke DB.
+    *   [x] Tambahkan validasi dasar (misal: nama tidak boleh kosong).
+    *   [x] Redirect ke halaman daftar setelah berhasil.
 *   [ ] **C-03:** Buat halaman edit Institusi (`src/routes/institutions/[id]/edit/+page.svelte`).
     *   [ ] `load` function untuk fetch data institusi berdasarkan `params.id`.
     *   [ ] Pre-fill form dengan data yang ada.

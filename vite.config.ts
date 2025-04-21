@@ -21,9 +21,11 @@ export default defineConfig({
 			},
 			{
 				extends: './vite.config.ts',
+				plugins: [sveltekit()],
 				test: {
 					name: 'server',
 					environment: 'node',
+					setupFiles: ['./vitest-setup-server.ts'], // Use dedicated setup file for server tests
 					include: ['src/**/*.{test,spec}.{js,ts}'],
 					exclude: ['src/**/*.svelte.{test,spec}.{js,ts}']
 				}
