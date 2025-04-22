@@ -64,10 +64,10 @@
     *   [x] Tambahkan validasi dasar (misal: nama tidak boleh kosong).
     *   [x] Redirect ke halaman daftar setelah berhasil.
 *   [ ] **C-03:** Buat halaman edit Institusi (`src/routes/institutions/[id]/edit/+page.svelte`).
-    *   [ ] `load` function untuk fetch data institusi berdasarkan `params.id`.
-    *   [ ] Pre-fill form dengan data yang ada.
-    *   [ ] Implementasikan form action untuk update data di DB.
-    *   [ ] Redirect ke halaman daftar atau detail setelah berhasil.
+    *   [x] `load` function untuk fetch data institusi berdasarkan `params.id`.
+    *   [x] Pre-fill form dengan data yang ada.
+    *   [x] Implementasikan form action untuk update data di DB.
+    *   [x] Redirect ke halaman daftar atau detail setelah berhasil.
 *   [ ] **C-04:** Implementasikan fungsi Hapus Institusi.
     *   [ ] Tambahkan form action atau API endpoint untuk menghapus.
     *   [ ] Tambahkan konfirmasi sebelum menghapus (misal: modal DaisyUI).

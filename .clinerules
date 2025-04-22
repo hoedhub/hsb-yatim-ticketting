@@ -1,6 +1,9 @@
 # Project Guidelines
 - Always read PRD.md and todo-*.md to have good understanding of the codebase and it's current state.
-- After completing tasks, ALWAYS make sure to run pnpm check making sure the codebase is error free.
+- This is a Svelte 5 project so you should always follow the best practices of Svelte 5.
+- After completing tasks:
+    - ALWAYS make sure to run pnpm check making sure the codebase is error free.
+    - Update memory-bank
 - Always look for existing code to iterate on instead of creating new code.
 - Do not drastically change the patterns before trying to iterate on existing patterns.
 - Always kill all existing related servers that may have been created in previous testing before trying to start a new server.
@@ -17,9 +20,7 @@
 - Never overwrite my .env file without first asking and confirming
 - Focus on the areas of code relevant to the task
 - Do not touch code that is unrelated to the task
-- Write thorough tests for all major functionality
+- Don't write any test for the whole codebase
 - Avoid making major changes to the patterns and architecture of how a feature works, after it has shown to work well, unless explicitly instructed
 - Always think about what other methods and areas of code might be affected by code changes
-- Use Tailwind CSS classes instead of inline style objects for new markup
-- Before attempting completion, always make sure that any code changes have test coverage
-- Ensure all tests pass before submitting changes
+- Use Tailwind CSS/daisyUI classes instead of inline style objects for new markup
