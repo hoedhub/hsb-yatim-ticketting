@@ -272,6 +272,88 @@
 	// Columns can often be reused, but might differ slightly
 	const serverColumns = clientColumns; // Reusing columns for simplicity
 	const serverActions = userActions; // Reusing actions
+
+	// --- DummyJSON Products Demo ---
+	// Get the page data from +page.server.ts
+	export let data;
+
+	// Product type definition
+	type Product = {
+	    id: number;
+	    title: string;
+	    description: string;
+	    price: number;
+	    discountPercentage: number;
+	    rating: number;
+	    stock: number;
+	    brand: string;
+	    category: string;
+	    thumbnail: string;
+	};
+
+	// Column definitions for products
+	const productColumns: ColumnDefinition<Product>[] = [
+	    { key: 'id', label: 'ID', sortable: true, cellClass: 'text-center' },
+	    { 
+	        key: 'thumbnail', 
+	        label: 'Image',
+	        formatter: (value) => `<img src="${value}" alt="" class="w-12 h-12 object-cover rounded" />`,
+	        sortable: false,
+	        cellClass: 'w-16'
+	    },
+	    { key: 'title', label: 'Product', sortable: true },
+	    { key: 'brand', label: 'Brand', sortable: true },
+	    { key: 'category', label: 'Category', sortable: true },
+	    { 
+	        key: 'price', 
+	        label: 'Price', 
+	        sortable: true,
+	        formatter: (value) => `$${value.toFixed(2)}`,
+	        cellClass: 'text-right font-mono'
+	    },
+	    { 
+	        key: 'rating', 
+	        label: 'Rating', 
+	        sortable: true,
+	        formatter: (value) => {
+	            const stars = '★'.repeat(Math.floor(value)) + '☆'.repeat(5 - Math.floor(value));
+	            return `<span class="text-warning">${stars}</span> ${value.toFixed(1)}`;
+	        },
+	        cellClass: 'text-center'
+	    },
+	    { 
+	        key: 'stock', 
+	        label: 'Stock', 
+	        sortable: true,
+	        formatter: (value) => {
+	            const color = value < 10 ? 'badge-error' : value < 50 ? 'badge-warning' : 'badge-success';
+	            return `<span class="badge ${color} badge-sm">${value}</span>`;
+	        },
+	        cellClass: 'text-center'
+	    }
+	];
+
+	// Product actions
+	const productActions: ActionDefinition<Product>[] = [
+	    {
+	        label: 'View Details',
+	        handler: (product) => alert(`View details for ${product.title}`),
+	    },
+	    {
+	        label: 'Edit Product',
+	        handler: (product) => alert(`Edit ${product.title}`),
+	    },
+	    {
+	        label: 'Delete Product',
+	        class: 'text-error',
+	        handler: (product) => {
+	            if (confirm(`Delete ${product.title}?`)) {
+	                console.log('Deleting product:', product.id);
+	            }
+	        },
+	        hidden: (product) => product.stock > 0 // Can't delete products in stock
+	    }
+	];
 </script>
 
 <svelte:head>
@@ -366,5 +448,69 @@
 				</tr>
 			{/snippet}
 		</AdvancedTable>
+	</section>
+
+	<!-- ========================== -->
+	<!-- DummyJSON Products Demo -->
+	<!-- ========================== -->
+	<section>
+	    <h2 class="mb-4 border-b pb-2 text-2xl font-semibold">Server-Side Data Demo (DummyJSON Products)</h2>
+	    <p class="mb-4 text-sm opacity-80">
+	        This table fetches real product data from <a href="https://dummyjson.com" class="link">DummyJSON</a>'s API server-side.
+	        Features pagination, sorting, search, and dynamic formatting.
+	    </p>
+
+	    <AdvancedTable
+	        data={data.products}
+	        columns={productColumns}
+	        rowKey="id"
+	        actions={productActions}
+	        allowSelection={true}
+	        pagination={true}
+	        defaultPageSize={10}
+	        tableClass="table-sm table-zebra w-full"
+	        tableId="products-table"
+	    >
+	        <!-- Loading State -->
+	        {#snippet loadingState()}
+	            <tr>
+	                <td colspan={productColumns.length + 2} class="p-8 text-center">
+	                    <div class="flex flex-col items-center gap-4">
+	                        <span class="loading loading-spinner loading-lg text-primary"></span>
+	                        <span>Loading products...</span>
+	                    </div>
+	                </td>
+	            </tr>
+	        {/snippet}
+
+	        <!-- Empty State -->
+	        {#snippet emptyState()}
+	            <tr>
+	                <td colspan={productColumns.length + 2} class="p-10 text-center">
+	                    <div class="flex flex-col items-center gap-4">
+	                        <span class="text-4xl">🛍️</span>
+	                        <p class="text-lg font-semibold">No products found</p>
+	                        <p class="text-sm opacity-70">Try adjusting your search filters</p>
+	                    </div>
+	                </td>
+	            </tr>
+	        {/snippet}
+
+	        <!-- Bulk Actions -->
+	        {#snippet bulkActionsRenderer(params)}
+	            <div class="flex items-center gap-4">
+	                <span class="text-sm">{params.selectedItems.length} products selected</span>
+	                <button
+	                    class="btn btn-sm btn-outline"
+	                    onclick={() => {
+	                        const total = params.selectedItems.reduce((sum, item) => sum + item.price, 0);
+	                        alert(`Total value: $${total.toFixed(2)}`);
+	                    }}
+	                >
+	                    Calculate Total Value
+	                </button>
+	            </div>
+	        {/snippet}
+	    </AdvancedTable>
 	</section>
 </div>
