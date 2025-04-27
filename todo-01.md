@@ -63,7 +63,7 @@
     *   [x] Implementasikan form action (`+page.server.ts`) untuk menyimpan data baru ke DB.
     *   [x] Tambahkan validasi dasar (misal: nama tidak boleh kosong).
     *   [x] Redirect ke halaman daftar setelah berhasil.
-*   [ ] **C-03:** Buat halaman edit Institusi (`src/routes/institutions/[id]/edit/+page.svelte`).
+*   [x] **C-03:** Buat halaman edit Institusi (`src/routes/institutions/[id]/edit/+page.svelte`).
     *   [x] `load` function untuk fetch data institusi berdasarkan `params.id`.
     *   [x] Pre-fill form dengan data yang ada.
     *   [x] Implementasikan form action untuk update data di DB.

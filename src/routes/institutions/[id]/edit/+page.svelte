@@ -2,7 +2,7 @@
 	import type { PageData } from './$types';
 	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
-	import { showToast } from '$lib/stores/toastStore';
+	import { toast } from '$lib/components/toast/toast.service.svelte';
 
 	export let data: PageData;
 	// Declare variables
@@ -26,6 +26,7 @@
 
 	<form
 		method="POST"
+		action="?/update"
 		use:enhance={() => {
 			return async ({ result }) => {
 				if (result.type === 'redirect') {
@@ -41,13 +42,18 @@
 						| undefined;
 
 					if (serverResponse?.message) {
-						showToast(serverResponse.message, serverResponse.success ? 'success' : 'error');
+						if (serverResponse.success) {
+							toast.success(serverResponse.message);
+						} else {
+							toast.error(serverResponse.message);
+						}
 					} else {
 						// Fallback message if server response doesn't include one
-						showToast(
-							result.type === 'success' ? 'Operation successful.' : 'Operation failed.',
-							result.type === 'success' ? 'success' : 'error'
-						);
+						if (result.type === 'success') {
+							toast.success('Operation successful.');
+						} else {
+							toast.error('Operation failed.');
+						}
 					}
 
 					// If the action was 'updateAndClose' and the operation was successful, redirect
@@ -58,7 +64,7 @@
 					// Server action threw an unexpected error
 					// The error object might contain a message
 					const errorMessage = (result.error as any)?.message || 'An unexpected error occurred.';
-					showToast(errorMessage, 'error');
+					toast.error(errorMessage);
 				}
 			};
 		}}

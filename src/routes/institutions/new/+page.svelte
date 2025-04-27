@@ -1,34 +1,50 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { goto } from '$app/navigation'; // Import goto for redirection
 	import type { ActionData } from './$types';
+	import { toast } from '$lib/components/toast/toast.service.svelte';
 
-	export let form: ActionData;
+	let { form }: { form: ActionData } = $props();
 </script>
 
 <div class="container mx-auto p-4">
 	<h1 class="mb-6 text-2xl font-bold">Tambah Institusi Baru</h1>
 
-	{#if form?.error}
-		<div role="alert" class="alert alert-error mb-4">
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				class="h-6 w-6 shrink-0 stroke-current"
-				fill="none"
-				viewBox="0 0 24 24"
-				><path
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					stroke-width="2"
-					d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-				/></svg
-			>
-			<span>{form.error}</span>
-		</div>
-	{/if}
-
 	<div class="card bg-base-100 w-full max-w-lg shadow-xl">
 		<div class="card-body">
-			<form method="POST" use:enhance>
+			<form
+				method="POST"
+				use:enhance={() => {
+					return async ({ result }) => {
+						if (result.type === 'success') {
+							const serverResponse = result.data as
+								| { success?: boolean; message?: string }
+								| undefined;
+							if (serverResponse?.message) {
+								toast.success(serverResponse.message);
+								goto('/institutions'); // Redirect after showing success toast
+							} else {
+								toast.success('Operation successful.');
+								goto('/institutions'); // Redirect even with fallback message
+							}
+						} else if (result.type === 'failure') {
+							const serverResponse = result.data as
+								| { success?: boolean; message?: string; errors?: any }
+								| undefined;
+							if (serverResponse?.message) {
+								// Only show a general error toast if there's a message but no specific field errors
+								if (!serverResponse.errors) {
+									toast.error(serverResponse.message);
+								}
+							} else {
+								// Fallback error message if no specific message from server action data
+								toast.error('Operation failed.');
+							}
+						}
+						// No explicit handling for result.type === 'redirect' needed here
+					};
+				}}
+			>
 				<!-- Nama Institusi -->
 				<div class="form-control mb-4 w-full">
 					<label class="label" for="nama">

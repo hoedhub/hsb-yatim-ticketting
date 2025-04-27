@@ -1,0 +1,72 @@
+<script lang="ts" generics="T extends Record<string, any>">
+	// import type { SvelteComponent } from 'svelte';
+	import type { ColumnDefinition } from './types';
+
+	interface Props {
+		cellValue: any; // The specific value for this cell
+		rowData: T; // The data for the entire row
+		column: ColumnDefinition<T>; // The definition for this column
+	}
+
+	const { cellValue, rowData, column }: Props = $props();
+
+	// Destructure column properties for easier access
+	const {
+		formatter, // Phase 7: Custom formatting function
+		component: CustomComponent, // Phase 7: Custom Svelte component for rendering
+		cellClass = '', // Custom classes for the <td>
+		key: columnKey, // Column key
+		label: columnLabel // Column label (used for data-label)
+	} = column;
+
+	// --- Cell Content Logic ---
+
+	// Apply formatter if provided
+	let formattedValue = $derived(formatter ? formatter(cellValue, rowData) : cellValue);
+
+	// Determine if a custom component should be rendered
+	const renderCustomComponent = $derived(!!CustomComponent);
+</script>
+
+<td class={cellClass} data-label={columnLabel}>
+	{#if renderCustomComponent}
+		<!-- Phase 7: Render custom Svelte component -->
+		<CustomComponent value={cellValue} {rowData} {column} />
+	{:else}
+		<!-- Default rendering: display formatted value -->
+		<!-- Handle potential HTML rendering if formatter returns safe HTML -->
+		<!-- Warning: Only use {@html ...} if formatter explicitly sanitizes output! -->
+		{@html formattedValue}
+		<!-- Use simple text rendering if formattedValue is not expected to be HTML -->
+		<!-- {formattedValue} -->
+	{/if}
+</td>
+
+<style>
+	/* Add specific styles for TableCell if needed */
+	/* Example for responsive stacking (requires CSS in parent/global scope) */
+
+	@media (max-width: theme('screens.md')) {
+		td {
+			display: block;
+			width: 100%;
+			text-align: right; /* Align value to the right */
+			padding-left: 50%; /* Make space for the label */
+			position: relative;
+			border-bottom: 1px solid hsl(var(--b2)); /* Add separator */
+		}
+		td::before {
+			content: attr(data-label); /* Display the label */
+			position: absolute;
+			left: 0;
+			width: 45%; /* Adjust width as needed */
+			padding-right: 10px;
+			white-space: nowrap;
+			text-align: left; /* Align label to the left */
+			font-weight: bold;
+		}
+		td:last-child {
+			border-bottom: 0;
+		}
+	}
+</style>

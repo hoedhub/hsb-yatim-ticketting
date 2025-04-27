@@ -2,8 +2,9 @@ import { db } from '$lib/server/db';
 import { institutions } from '$lib/server/db';
 import { eq } from 'drizzle-orm';
 import { error, redirect } from '@sveltejs/kit';
+import type { ServerLoadEvent, RequestEvent } from '@sveltejs/kit'; // Import necessary types
 
-export const load = async ({ params }) => {
+export const load = async ({ params }: ServerLoadEvent) => { // Use ServerLoadEvent type
     const institutionId = params.id;
     if (!institutionId) {
         error(400, 'Institution ID is required');
@@ -21,7 +22,7 @@ export const load = async ({ params }) => {
 };
 
 export const actions = {
-    default: async ({ request, params }) => {
+    update: async ({ request, params }: RequestEvent) => { // Renamed from default to update
         const formData = await request.formData();
         const institutionId = params.id;
         if (!institutionId) {
@@ -67,5 +68,25 @@ export const actions = {
             message: 'Institution updated successfully.',
             action: action // Include action in the response for client-side handling
         };
+    },
+
+    delete: async ({ params }: RequestEvent) => { // Use RequestEvent type
+        const institutionId = params.id;
+        if (!institutionId) {
+            error(400, 'Institution ID is required');
+        }
+
+        try {
+            await db.delete(institutions)
+                .where(eq(institutions.id, parseInt(institutionId))); // Parse ID to integer
+
+        } catch (err) {
+            console.error('Error deleting institution:', err);
+            // Handle potential foreign key constraints or other errors
+            error(500, 'Failed to delete institution. It might be linked to existing data.');
+        }
+
+        // Redirect to the list page after successful deletion
+        redirect(303, '/institutions');
     }
 };

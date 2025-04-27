@@ -1,4 +1,4 @@
-import { fail, redirect } from '@sveltejs/kit';
+import { fail } from '@sveltejs/kit';
 import { db } from '$lib/server/db';
 import { institutions } from '$lib/server/db';
 
@@ -12,19 +12,20 @@ export const actions = {
 
         // Basic validation
         if (!nama) {
-            return fail(400, {
+            return {
+                success: false,
+                message: 'Validasi gagal.', // General message for validation errors
                 nama,
                 pic,
                 kontak,
                 alamat,
-                error: 'Nama Institusi tidak boleh kosong.',
                 errors: {
                     nama: 'Nama Institusi tidak boleh kosong.',
-                    pic: undefined, // Include pic error field
-                    kontak: undefined, // Include kontak error field
-                    alamat: undefined // Include alamat error field
+                    pic: undefined,
+                    kontak: undefined,
+                    alamat: undefined
                 }
-            });
+            };
         }
 
         try {
@@ -36,16 +37,20 @@ export const actions = {
             });
         } catch (error) {
             console.error('Database insertion failed:', error);
-            return fail(500, {
+            return {
+                success: false,
+                message: 'Terjadi kesalahan saat menyimpan data institusi.',
                 nama,
                 pic,
                 kontak,
-                alamat,
-                error: 'Terjadi kesalahan saat menyimpan data institusi.'
-            });
+                alamat
+            };
         }
 
-        // Redirect on success
-        redirect(303, '/institutions');
+        // Return success message on success
+        return {
+            success: true,
+            message: 'Institusi berhasil ditambahkan.'
+        };
     }
 };

@@ -2,7 +2,7 @@
 	import '../app.css';
 	import { page } from '$app/stores'; // Import page store for active link styling
 	import { browser } from '$app/environment'; // Import BROWSER for $effect safety if needed
-	import Toast from '$lib/components/Toast.svelte';
+	import ToastContainer from '$lib/components/toast/ToastContainer.svelte';
 
 	let { children } = $props();
 
@@ -115,6 +115,6 @@
 	<main class="flex-1 p-4">
 		{@render children()}
 	</main>
-
-	<Toast />
 </div>
+
+<ToastContainer position="top-right" />
