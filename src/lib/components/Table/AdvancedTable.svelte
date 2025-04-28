@@ -69,6 +69,7 @@
 	let sortKey = $state<keyof T | string | null>(defaultSortKey);
 	let sortDirection = $state<'asc' | 'desc'>(defaultSortDirection);
 	let globalFilter = $state(''); // Phase 4: Global Search Term
+	let globalFilterTimeout: ReturnType<typeof setTimeout>; // Timer for debouncing
 	let columnFilters = $state<Record<string, any>>({}); // Phase 7: Per-column filters
 	let selectedRows = $state<Set<string | number>>(new Set()); // Phase 5: Selection state (using rowKey values)
 	let isLoading = $state(externalLoading); // Phase 6: Loading state
@@ -230,8 +231,13 @@
 
 	function handleGlobalFilterInput(event: Event) {
 		const target = event.target as HTMLInputElement;
-		globalFilter = target.value;
-		if (currentPage !== 1) currentPage = 1;
+		const value = target.value;
+
+		clearTimeout(globalFilterTimeout);
+		globalFilterTimeout = setTimeout(() => {
+			globalFilter = value;
+			if (currentPage !== 1) currentPage = 1; // Reset to first page on filter change
+		}, 300); // 300ms debounce delay
 	}
 	function updateColumnFilter(key: string, value: any) {
 		/* ... */
@@ -282,6 +288,20 @@
 				value={globalFilter}
 				oninput={handleGlobalFilterInput}
 			/>
+			{#if globalFilter}
+				<button
+					type="button"
+					class="btn btn-ghost btn-xs text-lg"
+					onclick={() => {
+						globalFilter = '';
+						clearTimeout(globalFilterTimeout); // Clear any pending debounce
+						if (currentPage !== 1) currentPage = 1; // Reset to first page
+					}}
+					aria-label="Clear search filter"
+				>
+					&Cross;
+				</button>
+			{/if}
 		</label>
 		{#if filterRenderer}
 			{@render filterRenderer({ updateFilter: updateColumnFilter })}
@@ -291,18 +311,29 @@
 	<!-- Bulk Actions Area -->
 	{#if allowSelection && selectedRows.size > 0}
 		<div class="bulk-actions-area bg-base-200 rounded-lg p-2">
-			{#if bulkActionsRenderer}
-				{@render bulkActionsRenderer({ selectedItems: selectedItemsData() })}
-			{:else}
-				<span class="mr-4 text-sm opacity-70"
-					>{selectedRows.size} item{selectedRows.size === 1 ? '' : 's'} selected</span
-				>
+			<div class="flex items-center gap-4">
 				<button
-					class="btn btn-sm btn-error btn-outline"
-					onclick={() => console.log('Delete selected:', selectedItemsData())}
-					>Delete Selected</button
+					type="button"
+					class="btn btn-ghost btn-xs -mr-4 text-lg"
+					onclick={() => {
+						selectedRows = new Set(); // Clear selection
+					}}
+					aria-label="Clear selection"
 				>
-			{/if}
+					&Cross;
+				</button>
+				{#if bulkActionsRenderer}
+					{@render bulkActionsRenderer({ selectedItems: selectedItemsData() })}
+				{:else}
+					<!-- Default bulk action button -->
+					<button
+						class="btn btn-sm btn-error btn-outline"
+						onclick={() => console.log('Default Delete selected:', selectedItemsData())}
+					>
+						Delete Selected
+					</button>
+				{/if}
+			</div>
 		</div>
 	{/if}
 
@@ -312,11 +343,12 @@
 			<thead class="bg-base-200">
 				<tr>
 					{#if allowSelection}
-						<th class="bg-base-200 sticky left-0 z-10 w-1">
+						<th class="bg-base-200 group sticky left-0 z-10 w-1">
 							<label>
 								<input
 									type="checkbox"
-									class="checkbox checkbox-sm"
+									class="checkbox checkbox-sm transition-opacity group-hover:opacity-100"
+									class:opacity-0={!selectAllChecked && !selectAllIndeterminate}
 									checked={selectAllChecked}
 									indeterminate={selectAllIndeterminate}
 									onchange={toggleSelectAll}

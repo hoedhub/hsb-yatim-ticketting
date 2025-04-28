@@ -44,7 +44,7 @@
 	const rowId = $derived(rowData[rowKey] ?? `row-${Math.random()}`); // Fallback ID if key is missing
 </script>
 
-<tr class:active={isSelected} class="hover">
+<tr class:active={isSelected} class="group hover">
 	{#if showSelection}
 		<!-- Selection Checkbox Cell (Phase 5) -->
 		<td class="sticky left-0 z-10 w-1">
@@ -52,7 +52,8 @@
 			<label class="flex h-full items-center justify-center">
 				<input
 					type="checkbox"
-					class="checkbox checkbox-sm"
+					class="checkbox checkbox-sm transition-opacity group-hover:opacity-100"
+					class:opacity-0={!isSelected}
 					checked={isSelected}
 					onchange={handleSelectionChange}
 					aria-label={`Select row ${rowId}`}

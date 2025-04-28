@@ -6,9 +6,10 @@
 		cellValue: any; // The specific value for this cell
 		rowData: T; // The data for the entire row
 		column: ColumnDefinition<T>; // The definition for this column
+		globalFilter?: string; // Add global filter prop for highlighting
 	}
 
-	const { cellValue, rowData, column }: Props = $props();
+	const { cellValue, rowData, column, globalFilter = '' }: Props = $props();
 
 	// Destructure column properties for easier access
 	const {
@@ -36,9 +37,15 @@
 		<!-- Default rendering: display formatted value -->
 		<!-- Handle potential HTML rendering if formatter returns safe HTML -->
 		<!-- Warning: Only use {@html ...} if formatter explicitly sanitizes output! -->
-		{@html formattedValue}
-		<!-- Use simple text rendering if formattedValue is not expected to be HTML -->
-		<!-- {formattedValue} -->
+		<!-- Apply highlighting if globalFilter is active and no custom component is used -->
+		{#if globalFilter && typeof formattedValue === 'string'}
+			{@html formattedValue.replace(
+				new RegExp(`(${globalFilter})`, 'gi'),
+				'<mark class="bg-yellow-300">$1</mark>' // Use DaisyUI/Tailwind class for highlighting
+			)}
+		{:else}
+			{@html formattedValue}
+		{/if}
 	{/if}
 </td>
 
