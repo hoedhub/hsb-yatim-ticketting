@@ -119,11 +119,13 @@
 	<div class="flex flex-wrap items-center gap-4">
 		<!-- Page Size Selector -->
 		{#if pageSizeOptions.length > 0}
-			<div>
-				<label for="pageSizeSelect" class="mr-2 opacity-80">Items per page:</label>
+			<div class="flex items-center">
+				<label for="pageSizeSelect" class="mr-2 whitespace-nowrap opacity-80">Items per page:</label
+				>
 				<select
 					id="pageSizeSelect"
-					class="select select-bordered select-xs"
+					class="select select-xs !py-0"
+					aria-label="Select page size"
 					value={pageSize}
 					onchange={handlePageSizeChange}
 				>

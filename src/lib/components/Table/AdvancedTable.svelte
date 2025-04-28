@@ -188,7 +188,27 @@
 			filters: { ...columnFilters, global: globalFilter }
 		};
 		const loadData = async () => {
-			/* ... fetch logic ... */
+			isLoading = true;
+			internalError = null;
+			try {
+				const result = await fetchDataFn(params);
+				if (!aborted) {
+					// Check if the effect was aborted during the async operation
+					internalData = result.data;
+					totalItems = result.totalItems;
+				}
+			} catch (e: any) {
+				if (!aborted) {
+					console.error('Error fetching data:', e);
+					internalError = e.message || 'An error occurred while fetching data.';
+					internalData = []; // Clear data on error
+					totalItems = 0;
+				}
+			} finally {
+				if (!aborted) {
+					isLoading = false;
+				}
+			}
 		};
 		loadData();
 		return () => {
@@ -201,10 +221,11 @@
 		/* ... */
 	}
 	function handlePageChange(newPage: number) {
-		/* ... */
+		currentPage = newPage;
 	}
 	function handlePageSizeChange(newPageSize: number) {
-		/* ... */
+		pageSize = newPageSize;
+		currentPage = 1; // Reset to first page when page size changes
 	}
 
 	function handleGlobalFilterInput(event: Event) {
