@@ -14,7 +14,7 @@
 		isSelected: boolean;
 		showSelection: boolean; // Controls if the selection checkbox cell is rendered
 		// expanded?: boolean; // Prop for future expansion state (Phase 7+)
-		// visibleColumns?: Set<string | number | symbol>; // Prop for column visibility (Phase 7+)
+		visibleColumnKeys: Set<string | number | symbol>; // Prop for column visibility
 	}
 
 	const {
@@ -24,9 +24,9 @@
 		rowKey,
 		actions = [],
 		isSelected = false,
-		showSelection = false
+		showSelection = false,
 		// expanded = false, // For future use
-		// visibleColumns = new Set(columns.map(c => c.key)), // For future use
+		visibleColumnKeys // Use the new prop
 	}: Props = $props();
 
 	const dispatch = createEventDispatcher<{ toggleSelection: void }>();
@@ -35,11 +35,8 @@
 		dispatch('toggleSelection');
 	}
 
-	// Phase 7 preparation: Filter columns based on visibility state if passed down
-	// For now, just use all columns that aren't explicitly hidden
-	// const finalColumns = $derived(columns.filter(c => !c.hidden && visibleColumns.has(c.key)));
-	// Simplified for now until Phase 7 column visibility UI is done:
-	const displayColumns = columns.filter((c) => !c.hidden);
+	// Filter columns based on the passed visibleColumnKeys set
+	const displayColumns = $derived(columns.filter((c) => visibleColumnKeys.has(c.key)));
 
 	const rowId = $derived(rowData[rowKey] ?? `row-${Math.random()}`); // Fallback ID if key is missing
 </script>

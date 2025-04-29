@@ -74,6 +74,7 @@
 	let selectedRows = $state<Set<string | number>>(new Set()); // Phase 5: Selection state (using rowKey values)
 	let isLoading = $state(externalLoading); // Phase 6: Loading state
 	let internalError = $state<string | null>(externalError); // Phase 6: Error state
+	let columnVisibility = $state<Record<string, boolean>>({}); // State to manage column visibility
 
 	// --- Derived State ---
 	const isServerSide = $derived(!!fetchData);
@@ -162,7 +163,15 @@
 		const currentSelectedRows = selectedRows;
 		return sourceData.filter((item) => currentSelectedRows.has(getRowId(item)));
 	});
-	const finalColumns = $derived(columns.filter((c) => !c.hidden));
+	const finalColumns = $derived(
+		columns.filter((c) => {
+			const isHiddenByProp = c.hidden ?? false;
+			const isHiddenByToggle = columnVisibility[String(c.key)] ?? false;
+			return !isHiddenByProp && !isHiddenByToggle;
+		})
+	);
+
+	const visibleColumnKeys = $derived(new Set(finalColumns.map((c) => c.key)));
 
 	// --- Effects --- (Mostly unchanged, but ensure dependencies are correctly captured)
 	$effect(() => {
@@ -237,7 +246,7 @@
 		globalFilterTimeout = setTimeout(() => {
 			globalFilter = value;
 			if (currentPage !== 1) currentPage = 1; // Reset to first page on filter change
-		}, 300); // 300ms debounce delay
+		}, 600); // 300ms debounce delay
 	}
 	function updateColumnFilter(key: string, value: any) {
 		/* ... */
@@ -309,8 +318,8 @@
 	</div>
 
 	<!-- Bulk Actions Area -->
-	{#if allowSelection && selectedRows.size > 0}
-		<div class="bulk-actions-area bg-base-200 rounded-lg p-2">
+	<div class="bulk-actions-area bg-base-200 flex items-center rounded-lg p-2">
+		{#if allowSelection && selectedRows.size > 0}
 			<div class="flex items-center gap-4">
 				<button
 					type="button"
@@ -334,8 +343,78 @@
 					</button>
 				{/if}
 			</div>
+		{/if}
+
+		<div class="ml-auto">
+			<!-- Column Visibility Dropdown -->
+			<div class="dropdown dropdown-end">
+				<div
+					role="button"
+					tabindex="0"
+					class="btn btn-sm"
+					aria-haspopup="true"
+					aria-expanded="false"
+					aria-label="Toggle column visibility"
+				>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						width="16"
+						height="16"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						class="lucide lucide-columns"
+					>
+						<rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
+						<line x1="12" y1="3" x2="12" y2="21" />
+					</svg>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						width="12"
+						height="12"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						class="lucide lucide-chevron-down"><path d="m6 9 6 6 6-6" /></svg
+					>
+				</div>
+				<div
+					role="listbox"
+					tabindex="-1"
+					class="dropdown-content menu bg-base-100/85 rounded-box z-[1] w-52 border-[0.5px] p-2 shadow"
+				>
+					{#each columns as column}
+						<div
+							role="option"
+							class="px-2 py-1"
+							aria-selected={!columnVisibility[String(column.key)]}
+						>
+							<label class="label flex cursor-pointer items-center justify-between">
+								<span class="label-text">{column.label}</span>
+								<input
+									type="checkbox"
+									class="checkbox checkbox-sm"
+									checked={!columnVisibility[String(column.key)]}
+									onchange={(e) => {
+										columnVisibility = {
+											...columnVisibility,
+											[String(column.key)]: !(e.target as HTMLInputElement).checked
+										};
+									}}
+								/>
+							</label>
+						</div>
+					{/each}
+				</div>
+			</div>
 		</div>
-	{/if}
+	</div>
 
 	<!-- Table -->
 	<div class="overflow-x-auto">
@@ -393,6 +472,7 @@
 							rowIndex={i}
 							{rowKey}
 							{actions}
+							{visibleColumnKeys}
 							isSelected={allowSelection && selectedRows.has(getRowId(row))}
 							on:toggleSelection={() => toggleRowSelection(row)}
 							showSelection={allowSelection}

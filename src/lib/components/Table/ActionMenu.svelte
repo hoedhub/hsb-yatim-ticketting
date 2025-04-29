@@ -55,7 +55,7 @@
 		<!-- Dropdown Content -->
 		<ul
 			tabindex="0"
-			class="dropdown-content menu bg-base-100/85 rounded-box !absolute !z-50 w-52 -translate-x-7 -translate-y-8 p-2 shadow"
+			class="dropdown-content menu bg-base-100/85 rounded-box !absolute !z-50 w-52 -translate-x-7 -translate-y-8 border-[0.5px] p-2 shadow"
 			role="menu"
 		>
 			{#each visibleActions as action (action.label)}
