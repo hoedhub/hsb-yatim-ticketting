@@ -3,6 +3,8 @@
 	import { enhance } from '$app/forms';
 	import { /*invalidate*/ goto } from '$app/navigation'; // Import invalidate for data refresh
 	import { toast } from '$lib/components/toast/toast.service.svelte';
+	import AdvancedTable from '$lib/components/Table/AdvancedTable.svelte';
+	import type { ColumnDefinition, ActionDefinition } from '$lib/components/Table/types';
 
 	export let data: PageData;
 	// Reactive statement to watch the incoming data prop
@@ -14,6 +16,34 @@
 	// 	`[Page Component - ${new Date().toISOString()}] Reactive institutions list updated:`,
 	// 	institutions
 	// );
+
+	const columns: ColumnDefinition<(typeof institutions)[0]>[] = [
+		{ key: 'name', label: 'Nama' },
+		{ key: 'picName', label: 'PIC' },
+		{ key: 'contact', label: 'Kontak' },
+		{ key: 'address', label: 'Alamat' }
+	];
+
+	const actions: ActionDefinition<(typeof institutions)[0]>[] = [
+		{
+			label: 'Edit',
+			handler: (institution) => goto('/institutions/' + institution.id + '/edit')
+		},
+		{
+			label: 'Hapus',
+			class: 'text-error',
+			handler: (institution) => {
+				const modal = document.getElementById(
+					`delete_modal_${institution.id}`
+				) as HTMLDialogElement;
+				if (modal) {
+					modal.showModal();
+				}
+			}
+		}
+	];
+
+	const rowKey = 'id';
 	// No need for Flowbite Svelte components if using raw DaisyUI classes
 	// import { Table, TableHead, TableBody, TableRow, TableHeadCell, TableDataCell } from 'flowbite-svelte';
 	// import { Button } from 'flowbite-svelte';
@@ -30,48 +60,15 @@
 		<a href="/institutions/new" class="btn btn-primary">Tambah Institusi Baru</a>
 	</div>
 
-	<div class="overflow-x-auto">
-		<table class="table w-full">
-			<thead>
-				<tr>
-					<th>Nama</th>
-					<th>PIC</th>
-					<th>Kontak</th>
-					<th>Alamat</th>
-					<th>Aksi</th>
-				</tr>
-			</thead>
-			<tbody>
-				{#each institutions as institution (institution.id)}
-					<tr>
-						<td>{institution.name}</td>
-						<td>{institution.picName}</td>
-						<td>{institution.contact}</td>
-						<td>{institution.address}</td>
-						<td>
-							<a href="/institutions/{institution.id}/edit" class="btn btn-sm btn-ghost">Edit</a>
-							<!-- Delete button triggers modal -->
-							<button
-								class="btn btn-sm btn-ghost text-error"
-								on:click={() => {
-									const modal = document.getElementById(
-										`delete_modal_${institution.id}`
-									) as HTMLDialogElement;
-									if (modal) {
-										modal.showModal();
-									}
-								}}>Hapus</button
-							>
-						</td>
-					</tr>
-				{:else}
-					<tr>
-						<td colspan="5" class="text-center">Belum ada data institusi.</td>
-					</tr>
-				{/each}
-			</tbody>
-		</table>
-	</div>
+	<AdvancedTable data={institutions} {columns} {rowKey} {actions} tableClass="table w-full">
+		{#snippet emptyState()}
+			<tr class="text-center">
+				<td colspan={columns.length + (actions.length > 0 ? 1 : 0)} class="p-10">
+					<p class="text-warning text-lg font-semibold">⚠️ Belum ada data institusi.</p>
+				</td>
+			</tr>
+		{/snippet}
+	</AdvancedTable>
 </div>
 
 <!-- DaisyUI Modal for Delete Confirmation -->

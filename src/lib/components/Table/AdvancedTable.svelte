@@ -183,6 +183,7 @@
 	$effect(() => {
 		if (!isServerSide && externalData) {
 			internalData = externalData;
+			totalItems = externalData.length; // Update totalItems for client-side data
 		}
 	});
 	$effect(() => {
