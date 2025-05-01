@@ -330,7 +330,7 @@
 					}}
 					aria-label="Clear selection"
 				>
-					&Cross;
+					&Cross; <span class="text-xs">{selectedRows.size} selected</span>
 				</button>
 				{#if bulkActionsRenderer}
 					{@render bulkActionsRenderer({ selectedItems: selectedItemsData() })}

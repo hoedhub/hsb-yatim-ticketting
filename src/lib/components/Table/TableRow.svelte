@@ -43,13 +43,13 @@
 
 <tr
 	class:active={isSelected}
-	class="group hover border-base-300 mb-4 block rounded-lg border p-4 md:mb-0 md:table-row md:rounded-none md:border-0 md:p-0"
+	class="group hover border-base-300 mb-4 block rounded-lg border p-4 shadow-md md:mb-0 md:table-row md:rounded-none md:border-0 md:p-0"
 >
 	{#if showSelection}
 		<!-- Selection Checkbox Cell (Phase 5) -->
-		<td class="sticky left-0 z-10 w-1">
+		<td class="flex w-full justify-center py-2 md:sticky md:z-10">
 			<!-- Needs sticky background handling - DaisyUI themes might handle this or require override -->
-			<label class="flex h-full items-center justify-center">
+			<label class="flex h-full w-full items-center justify-center">
 				<input
 					type="checkbox"
 					class="checkbox checkbox-sm transition-opacity group-hover:opacity-100"
@@ -64,12 +64,17 @@
 
 	{#each displayColumns as column (column.key)}
 		<!-- Pass rowData, column definition, and computed cell value -->
-		<TableCell cellValue={rowData[column.key]} {rowData} {column} />
+		<td class="mb-2 block p-3 md:mb-0 md:table-cell md:p-0">
+			<div class="mb-1 block text-sm font-bold md:hidden">
+				{column.label}
+			</div>
+			<TableCell cellValue={rowData[column.key]} {rowData} {column} />
+		</td>
 	{/each}
 
 	{#if actions.length > 0}
 		<!-- Actions Cell (Phase 5) -->
-		<td class="sticky right-0">
+		<td class="flex w-full justify-end py-2 md:sticky md:right-0">
 			<!-- Needs sticky background handling -->
 			<div class="flex h-full items-center justify-end pr-2">
 				<ActionMenu {rowData} {actions} />
@@ -91,21 +96,5 @@
 {/if}
 
 <style>
-	/* Ensure sticky cells have appropriate background, especially when row is active/hovered */
-	/* DaisyUI's 'active' class on TR might need help styling sticky TD backgrounds */
-	/* The 'group' utility might be needed on TR if not already applied by DaisyUI */
-	tr.active td.sticky {
-		/* Use DaisyUI color variables for consistency */
-		background-color: hsl(var(--a) / var(--tw-bg-opacity, 1));
-		/* DaisyUI v4+ approach might differ slightly, test themes */
-		/* Using group-[.active] in the class attribute is likely better */
-	}
-	tr.hover td.sticky {
-		background-color: hsl(var(--b2, var(--b1)) / var(--tw-bg-opacity, 1));
-		/* Ensure hover background applies to sticky cells */
-	}
-	/* Base sticky cell styling - may need adjustment based on theme */
-	td.sticky {
-		background-color: hsl(var(--b1) / 0.95); /* Default background with slight transparency */
-	}
+	/* No custom CSS needed for mobile card view with Tailwind/DaisyUI */
 </style>
