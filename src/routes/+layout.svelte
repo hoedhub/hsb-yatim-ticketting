@@ -35,7 +35,9 @@
 
 <div class="flex min-h-screen flex-col md:flex-row">
 	<!-- Header for small screens -->
-	<header class="bg-base-300 sticky top-0 flex items-center justify-between p-4 md:hidden">
+	<header
+		class="bg-base-300 sticky top-0 z-50 flex items-center justify-between p-4 shadow-xl md:hidden"
+	>
 		<!-- Changed: Use onclick event attribute -->
 		<button class="btn btn-square btn-ghost" onclick={toggleSidebar}>
 			<!-- Hamburger icon -->
@@ -106,6 +108,21 @@
 			</li>
 			<li>
 				<a href="/settings" class:active={isActive('/settings')}> Pengaturan </a>
+			</li>
+			<!-- Demo Section -->
+			<li class="menu-title">
+				<span>Demo Pages</span>
+			</li>
+			<li>
+				<a href="/demo/responsive" class:active={isActive('/demo/responsive')}>
+					Responsive Display
+				</a>
+			</li>
+			<li>
+				<a href="/demo/table" class:active={isActive('/demo/table')}> Advanced Table </a>
+			</li>
+			<li>
+				<a href="/demo/toast" class:active={isActive('/demo/toast')}> Toast Notifications </a>
 			</li>
 		</ul>
 	</aside>

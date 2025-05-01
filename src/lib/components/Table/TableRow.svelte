@@ -41,7 +41,10 @@
 	const rowId = $derived(rowData[rowKey] ?? `row-${Math.random()}`); // Fallback ID if key is missing
 </script>
 
-<tr class:active={isSelected} class="group hover">
+<tr
+	class:active={isSelected}
+	class="group hover border-base-300 mb-4 block rounded-lg border p-4 md:mb-0 md:table-row md:rounded-none md:border-0 md:p-0"
+>
 	{#if showSelection}
 		<!-- Selection Checkbox Cell (Phase 5) -->
 		<td class="sticky left-0 z-10 w-1">

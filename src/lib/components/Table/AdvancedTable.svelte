@@ -419,7 +419,7 @@
 	<!-- Table -->
 	<div class="overflow-x-auto">
 		<table class={`table ${tableClass}`} id={tableId}>
-			<thead class="bg-base-200">
+			<thead class="bg-base-200 hidden md:table-header-group">
 				<tr>
 					{#if allowSelection}
 						<th class="bg-base-200 group sticky left-0 z-10 w-1">
