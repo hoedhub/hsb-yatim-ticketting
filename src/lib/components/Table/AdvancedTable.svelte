@@ -75,6 +75,7 @@
 	let isLoading = $state(externalLoading); // Phase 6: Loading state
 	let internalError = $state<string | null>(externalError); // Phase 6: Error state
 	let columnVisibility = $state<Record<string, boolean>>({}); // State to manage column visibility
+	let isSelectionMode = $state(false); // State to track if multi-selection mode is active
 
 	// --- Derived State ---
 	const isServerSide = $derived(!!fetchData);
@@ -186,6 +187,13 @@
 			totalItems = externalData.length; // Update totalItems for client-side data
 		}
 	});
+
+	// Effect to exit selection mode when selectedRows becomes empty
+	$effect(() => {
+		if (isSelectionMode && selectedRows.size === 0) {
+			isSelectionMode = false;
+		}
+	});
 	$effect(() => {
 		if (!isServerSide || !fetchData) return;
 		// Dependencies: fetchData, currentPage, pageSize, sortKey, sortDirection, columnFilters, globalFilter
@@ -254,7 +262,7 @@
 	}
 
 	function toggleRowSelection(row: T) {
-		if (!allowSelection) return;
+		if (!allowSelection || !isSelectionMode) return; // Only toggle if selection mode is active
 		const id = getRowId(row);
 		const newSet = new Set(selectedRows);
 		if (newSet.has(id)) newSet.delete(id);
@@ -273,6 +281,12 @@
 			else newSet.add(id);
 		});
 		selectedRows = newSet;
+	}
+	function handleRowLongPress(row: T) {
+		if (!allowSelection) return;
+		// Initiate selection mode and select the row
+		isSelectionMode = true; // Enter selection mode
+		selectedRows = new Set([getRowId(row)]); // Select only the long-pressed row initially
 	}
 </script>
 
@@ -319,7 +333,20 @@
 	</div>
 
 	<!-- Bulk Actions Area -->
-	<div class="bulk-actions-area bg-base-200 flex items-center rounded-lg p-2">
+	<div class="bulk-actions-area bg-base-200 sticky top-0 flex items-center rounded-lg p-2">
+		{#if isSelectionMode}
+			<!-- Select All button for mobile -->
+			<div class="flex items-center md:hidden">
+				<button
+					type="button"
+					class="btn btn-sm btn-outline btn-primary"
+					onclick={toggleSelectAll}
+					aria-label="Select all visible rows"
+				>
+					Select All
+				</button>
+			</div>
+		{/if}
 		{#if allowSelection && selectedRows.size > 0}
 			<div class="flex items-center gap-4">
 				<button
@@ -348,7 +375,7 @@
 
 		<div class="ml-auto">
 			<!-- Column Visibility Dropdown -->
-			<div class="dropdown dropdown-end">
+			<div class="dropdown dropdown-end !relative z-50">
 				<div
 					role="button"
 					tabindex="0"
@@ -388,7 +415,7 @@
 				<div
 					role="listbox"
 					tabindex="-1"
-					class="dropdown-content menu bg-base-100/85 rounded-box z-[1] w-52 border-[0.5px] p-2 shadow"
+					class="dropdown-content menu bg-base-100/85 rounded-box !z-50 w-52 border-[0.5px] p-2 shadow"
 				>
 					{#each columns as column}
 						<div
@@ -476,7 +503,9 @@
 							{visibleColumnKeys}
 							isSelected={allowSelection && selectedRows.has(getRowId(row))}
 							on:toggleSelection={() => toggleRowSelection(row)}
+							on:longPress={() => handleRowLongPress(row)}
 							showSelection={allowSelection}
+							{isSelectionMode}
 						/>
 					{/each}
 				{/if}

@@ -55,7 +55,7 @@
 				></path>
 			</svg>
 		</button>
-		<h1 class="text-xl font-bold">App Title</h1>
+		<h1 class="-translate-x-5 text-xl font-bold">HSB Yatim</h1>
 		<!-- Add a title -->
 		<div></div>
 		<!-- Placeholder for potential right-aligned items -->

@@ -13,6 +13,7 @@
 		actions?: ActionDefinition<T>[];
 		isSelected: boolean;
 		showSelection: boolean; // Controls if the selection checkbox cell is rendered
+		isSelectionMode: boolean; // New prop to indicate if multi-selection mode is active
 		// expanded?: boolean; // Prop for future expansion state (Phase 7+)
 		visibleColumnKeys: Set<string | number | symbol>; // Prop for column visibility
 	}
@@ -25,14 +26,50 @@
 		actions = [],
 		isSelected = false,
 		showSelection = false,
+		isSelectionMode = false, // Initialize new prop
 		// expanded = false, // For future use
 		visibleColumnKeys // Use the new prop
 	}: Props = $props();
 
-	const dispatch = createEventDispatcher<{ toggleSelection: void }>();
+	const dispatch = createEventDispatcher<{ toggleSelection: void; longPress: void; click: void }>(); // Add click event for potential future use or clarity
 
-	function handleSelectionChange() {
-		dispatch('toggleSelection');
+	let pressTimer: number | null = null;
+	const LONG_PRESS_DURATION = 500; // milliseconds
+	let longPressHandled = false; // Flag to prevent immediate click handling after long press
+
+	function handleTouchStart() {
+		pressTimer = window.setTimeout(() => {
+			dispatch('longPress');
+			longPressHandled = true; // Set flag after long press
+			pressTimer = null; // Reset timer after long press
+			// Reset the flag after a short delay to allow subsequent clicks
+			setTimeout(() => {
+				longPressHandled = false;
+			}, 100); // Adjust delay as needed
+		}, LONG_PRESS_DURATION);
+	}
+
+	function handleTouchEnd() {
+		if (pressTimer !== null) {
+			clearTimeout(pressTimer);
+			pressTimer = null;
+			// If it was a short press AND we are in selection mode AND long press wasn't just handled, toggle selection
+			if (isSelectionMode && !longPressHandled) {
+				dispatch('toggleSelection');
+			} else if (!isSelectionMode && !longPressHandled) {
+				// If not in selection mode and not a long press, dispatch a regular click event
+				// The parent component (AdvancedTable) is responsible for handling the regular click event.
+				dispatch('click');
+			}
+		}
+		// If longPressHandled is true, this touchEnd is part of the long press sequence, do nothing.
+	}
+
+	function handleTouchMove() {
+		if (pressTimer !== null) {
+			clearTimeout(pressTimer);
+			pressTimer = null;
+		}
 	}
 
 	// Filter columns based on the passed visibleColumnKeys set
@@ -43,25 +80,16 @@
 
 <tr
 	class:active={isSelected}
-	class="group hover border-base-300 mb-4 block rounded-lg border p-4 shadow-md md:mb-0 md:table-row md:rounded-none md:border-0 md:p-0"
+	class="{isSelected
+		? 'border-primary bg-gray-100 '
+		: ''}group hover border-base-300 mb-4 block rounded-lg border p-4 shadow-md md:mb-0 md:table-row md:rounded-none md:border-0 md:p-0"
+	ontouchstart={handleTouchStart}
+	ontouchend={handleTouchEnd}
+	ontouchmove={handleTouchMove}
+	onmousedown={handleTouchStart}
+	onmouseup={handleTouchEnd}
+	onmouseleave={handleTouchEnd}
 >
-	{#if showSelection}
-		<!-- Selection Checkbox Cell (Phase 5) -->
-		<td class="flex w-full justify-center py-2 md:sticky md:z-10">
-			<!-- Needs sticky background handling - DaisyUI themes might handle this or require override -->
-			<label class="flex h-full w-full items-center justify-center">
-				<input
-					type="checkbox"
-					class="checkbox checkbox-sm transition-opacity group-hover:opacity-100"
-					class:opacity-0={!isSelected}
-					checked={isSelected}
-					onchange={handleSelectionChange}
-					aria-label={`Select row ${rowId}`}
-				/>
-			</label>
-		</td>
-	{/if}
-
 	{#each displayColumns as column (column.key)}
 		<!-- Pass rowData, column definition, and computed cell value -->
 		<td class="mb-2 block p-3 md:mb-0 md:table-cell md:p-0">
@@ -94,7 +122,3 @@
 	</tr>
 	<!-- {/if} -->
 {/if}
-
-<style>
-	/* No custom CSS needed for mobile card view with Tailwind/DaisyUI */
-</style>
