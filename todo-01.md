@@ -69,8 +69,8 @@
     *   [x] Implementasikan form action untuk update data di DB.
     *   [x] Redirect ke halaman daftar atau detail setelah berhasil.
 *   [ ] **C-04:** Implementasikan fungsi Hapus Institusi.
-    *   [ ] Tambahkan form action atau API endpoint untuk menghapus.
     *   [ ] Tambahkan konfirmasi sebelum menghapus (misal: modal DaisyUI).
+    *   [ ] Tambahkan form action atau API endpoint untuk menghapus.
     *   [ ] Handle penghapusan dari halaman daftar.
 
 ## D. Manajemen Pelanggan Pribadi (CRUD)

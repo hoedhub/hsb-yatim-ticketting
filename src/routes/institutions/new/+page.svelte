@@ -3,12 +3,18 @@
 	import { goto } from '$app/navigation'; // Import goto for redirection
 	import type { ActionData } from './$types';
 	import { toast } from '$lib/components/toast/toast.service.svelte';
+	import { ChevronLeft } from 'lucide-svelte';
 
 	let { form }: { form: ActionData } = $props();
 </script>
 
 <div class="container mx-auto p-4">
-	<h1 class="mb-6 text-2xl font-bold">Tambah Institusi Baru</h1>
+	<div class="mb-6 flex items-center">
+		<button class="btn btn-circle btn-ghost" onclick={() => history.back()}>
+			<ChevronLeft />
+		</button>
+		<h1 class="text-2xl font-bold">Tambah Institusi Baru</h1>
+	</div>
 
 	<div class="card bg-base-100 w-full max-w-lg shadow-xl">
 		<div class="card-body">

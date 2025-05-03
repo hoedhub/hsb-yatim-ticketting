@@ -375,7 +375,7 @@
 
 		<div class="ml-auto">
 			<!-- Column Visibility Dropdown -->
-			<div class="dropdown dropdown-end !relative z-50">
+			<div class="dropdown dropdown-end !relative !z-50">
 				<div
 					role="button"
 					tabindex="0"
