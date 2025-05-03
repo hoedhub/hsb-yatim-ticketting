@@ -333,7 +333,7 @@
 	</div>
 
 	<!-- Bulk Actions Area -->
-	<div class="bulk-actions-area bg-base-200 sticky top-0 flex items-center rounded-lg p-2">
+	<div class="bulk-actions-area bg-base-200 sticky top-0 z-20 flex items-center rounded-lg p-2">
 		{#if isSelectionMode}
 			<!-- Select All button for mobile -->
 			<div class="flex items-center md:hidden">
@@ -375,7 +375,7 @@
 
 		<div class="ml-auto">
 			<!-- Column Visibility Dropdown -->
-			<div class="dropdown dropdown-end !relative !z-50">
+			<div class="dropdown dropdown-end !relative z-[1000]" style="z-index: 1000;">
 				<div
 					role="button"
 					tabindex="0"
