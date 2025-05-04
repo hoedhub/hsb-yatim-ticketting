@@ -262,26 +262,57 @@
 	}
 
 	function toggleRowSelection(row: T) {
-		if (!allowSelection || !isSelectionMode) return; // Only toggle if selection mode is active
+		if (!allowSelection) return; // Only toggle if selection is allowed
 		const id = getRowId(row);
 		const newSet = new Set(selectedRows);
-		if (newSet.has(id)) newSet.delete(id);
-		else newSet.add(id);
+
+		if (newSet.has(id)) {
+			// If the clicked row is already selected, deselect it.
+			newSet.delete(id);
+		} else {
+			// If the clicked row is not selected, add it to the selection.
+			newSet.add(id);
+		}
+
 		selectedRows = newSet;
+
+		// Update selection mode based on the new selection size
+		isSelectionMode = selectedRows.size > 0;
 	}
 
+	// function toggleRowSelection(row: T) {
+	// 	if (!allowSelection) return;
+	// 	const id = getRowId(row);
+	// 	const newSet = new Set(selectedRows);
+	// 	if (newSet.has(id)) newSet.delete(id);
+	// 	else newSet.add(id);
+	// 	selectedRows = newSet;
+	// }
 	function toggleSelectAll() {
 		if (!allowSelection) return;
 		const newSet = new Set(selectedRows);
 		const allSelected = selectAllChecked; // Use derived value
 		const currentDisplayData = displayData(); // Use unwrapped value
-		currentDisplayData.forEach((row: T) => {
-			const id = getRowId(row);
-			if (allSelected) newSet.delete(id);
-			else newSet.add(id);
-		});
+
+		if (allSelected) {
+			// If currently all are selected, deselect all displayed rows
+			currentDisplayData.forEach((row: T) => {
+				const id = getRowId(row);
+				newSet.delete(id);
+			});
+		} else {
+			// If not all are selected, add all displayed rows to the selection
+			currentDisplayData.forEach((row: T) => {
+				const id = getRowId(row);
+				newSet.add(id);
+			});
+		}
+
 		selectedRows = newSet;
+		// Update selection mode based on the new selection size
+		isSelectionMode = selectedRows.size > 0;
 	}
+
 	function handleRowLongPress(row: T) {
 		if (!allowSelection) return;
 		// Initiate selection mode and select the row

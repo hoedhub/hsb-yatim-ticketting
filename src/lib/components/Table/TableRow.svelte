@@ -72,6 +72,10 @@
 		}
 	}
 
+	function handleSelectionChange() {
+		dispatch('toggleSelection');
+	}
+
 	// Filter columns based on the passed visibleColumnKeys set
 	const displayColumns = $derived(columns.filter((c) => visibleColumnKeys.has(c.key)));
 
@@ -90,19 +94,33 @@
 	onmouseup={handleTouchEnd}
 	onmouseleave={handleTouchEnd}
 >
+	<td class="sticky left-0 z-10 hidden w-1 md:table-cell md:w-auto">
+		<label class="flex h-full items-center justify-center">
+			<label class="flex h-full w-full items-center justify-center">
+				<input
+					type="checkbox"
+					class="checkbox checkbox-xs transition-opacity group-hover:opacity-100"
+					class:opacity-0={!isSelected}
+					checked={isSelected}
+					onchange={handleSelectionChange}
+					aria-label={`Select row ${rowId}`}
+				/>
+			</label>
+		</label>
+	</td>
 	{#each displayColumns as column (column.key)}
 		<!-- Pass rowData, column definition, and computed cell value -->
-		<td class="mb-2 block p-3 md:mb-0 md:table-cell md:p-0">
+		<td class="-mb-3 block p-0 md:hidden">
 			<div class="mb-1 block text-sm font-bold md:hidden">
 				{column.label}
 			</div>
-			<TableCell cellValue={rowData[column.key]} {rowData} {column} />
 		</td>
+		<TableCell cellValue={rowData[column.key]} {rowData} {column} />
 	{/each}
 
 	{#if actions.length > 0}
 		<!-- Actions Cell (Phase 5) -->
-		<td class="flex w-full justify-end py-2 md:sticky md:right-0">
+		<td class="z-10 flex w-full justify-end py-2 md:sticky md:right-0">
 			<!-- Needs sticky background handling -->
 			<div class="flex h-full items-center justify-end pr-2">
 				<ActionMenu {rowData} {actions} />
