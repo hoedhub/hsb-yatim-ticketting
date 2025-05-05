@@ -87,12 +87,25 @@
 	class="{isSelected
 		? 'border-primary bg-gray-100 '
 		: ''}group hover border-base-300 mb-4 block rounded-lg border p-4 shadow-md md:mb-0 md:table-row md:rounded-none md:border-0 md:p-0"
-	ontouchstart={handleTouchStart}
-	ontouchend={handleTouchEnd}
-	ontouchmove={handleTouchMove}
-	onmousedown={handleTouchStart}
-	onmouseup={handleTouchEnd}
-	onmouseleave={handleTouchEnd}
+	ontouchstart={(e) => {
+		if (window.innerWidth < 768) handleTouchStart();
+	}}
+	ontouchend={(e) => {
+		if (window.innerWidth < 768) handleTouchEnd();
+	}}
+	ontouchmove={(e) => {
+		if (window.innerWidth < 768) handleTouchMove();
+	}}
+	onmousedown={(e) => {
+		if (window.innerWidth < 768) handleTouchStart();
+	}}
+	onmouseup={(e) => {
+		if (window.innerWidth < 768) handleTouchEnd();
+	}}
+	onmouseleave={(e) => {
+		if (window.innerWidth < 768) handleTouchEnd();
+	}}
+	role="button"
 >
 	<td class="sticky left-0 z-10 hidden w-1 md:table-cell md:w-auto">
 		<label class="flex h-full items-center justify-center">
