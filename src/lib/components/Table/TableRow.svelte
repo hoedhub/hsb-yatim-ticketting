@@ -105,7 +105,6 @@
 	onmouseleave={(e) => {
 		if (window.innerWidth < 768) handleTouchEnd();
 	}}
-	role="button"
 >
 	<td class="sticky left-0 z-10 hidden w-1 md:table-cell md:w-auto">
 		<label class="flex h-full items-center justify-center">

@@ -256,7 +256,6 @@
 			<!-- Bulk Actions -->
 			{#snippet bulkActionsRenderer(params)}
 				<div class="flex items-center gap-4">
-					<span class="text-sm">{params.selectedItems.length} products selected</span>
 					<button
 						class="btn btn-sm btn-outline"
 						onclick={() => {
